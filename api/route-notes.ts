@@ -22,13 +22,13 @@ export default async function handler(req: any, res: any) {
       return badRequest(res, "Missing routeId query parameter")
     }
 
-    const result = await db.sql`
+    const result = await db`
       SELECT id, route_id, type, text, created_at
       FROM route_notes
       WHERE route_id = ${routeId}
       ORDER BY created_at DESC`
 
-    return json(res, { success: true, changelog: result.rows ?? [] })
+    return json(res, { success: true, changelog: result ?? [] })
   }
 
   if (method === "POST") {
@@ -42,7 +42,7 @@ export default async function handler(req: any, res: any) {
       return badRequest(res, "Missing id, routeId, type, or text in request body")
     }
 
-    await db.sql`
+    await db`
       INSERT INTO route_notes (id, route_id, type, text)
       VALUES (${id}, ${routeId}, ${type}, ${text})`
 
@@ -56,7 +56,7 @@ export default async function handler(req: any, res: any) {
       return badRequest(res, "Missing routeId or type query parameter")
     }
 
-    await db.sql`
+    await db`
       DELETE FROM route_notes
       WHERE route_id = ${routeId}
         AND type = ${type}`

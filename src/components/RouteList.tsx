@@ -3,7 +3,6 @@ import { useRoadDistances } from "@/hooks/use-road-distances"
 import { useRegisterRefresh } from "@/contexts/RefreshContext"
 import { ClipboardList, List, Info, Plus, Check, X, Edit2, Trash2, Search, Save, ArrowUp, ArrowDown, Truck, Loader2, Cog, CheckCircle2, MapPin, Route, AlertCircle, History, MapPinned, TableProperties, Shrink, Expand, ChevronUp, ChevronDown, ChevronsUpDown, Filter, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { formatKm, haversineKm } from "@/lib/road-distance"
 import { toast } from "sonner"
 import { RowInfoModal } from "./RowInfoModal"
 import { DeliveryMap } from "@/components/DeliveryMap"
@@ -219,6 +218,22 @@ function isDeliveryActive(delivery: string, date: Date = new Date()): boolean {
 
 // ── Distance helpers ──────────────────────────────────────────────
 const DEFAULT_MAP_CENTER = { lat: 3.0695500, lng: 101.5469179 }
+
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371
+  const toRad = (d: number) => (d * Math.PI) / 180
+  const dLat = toRad(lat2 - lat1)
+  const dLon = toRad(lon2 - lon1)
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+function formatKm(km: number): string {
+  const rounded = Math.round(km * 10) / 10
+  return `${rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(1)} Km`
+}
 
 function areSetsEqual<T>(left: Set<T>, right: Set<T>): boolean {
   if (left.size !== right.size) return false

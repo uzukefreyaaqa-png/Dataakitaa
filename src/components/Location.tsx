@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { Link, Loader2, AlertCircle, AlertTriangle, Search, X, ChevronUp, ChevronDown as ChevronDownIcon, ChevronsUpDown, Filter, Check, Columns2, Info, BookmarkPlus, Copy, Trash2, ExternalLink, Bookmark, Pencil, CheckCheck, Navigation2, LayoutList } from "lucide-react"
 import { toast } from "sonner"
 import { cn, parseSmartQuery } from "@/lib/utils"
-import { formatKm, haversineKm } from "@/lib/road-distance"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { RowInfoModal } from "@/components/RowInfoModal"
@@ -52,6 +51,11 @@ interface SavedRowOrder {
 
 const DEFAULT_MAP_CENTER = { lat: 3.06955, lng: 101.5469179 }
 
+function formatKm(km: number): string {
+  const rounded = Math.round(km * 10) / 10
+  return `${rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(1)} Km`
+}
+
 function areSetsEqual<T>(left: Set<T>, right: Set<T>): boolean {
   if (left.size !== right.size) return false
   for (const value of left) {
@@ -61,6 +65,15 @@ function areSetsEqual<T>(left: Set<T>, right: Set<T>): boolean {
 }
 
 // ─── Route optimisation helpers ───────────────────────────────────────────────
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371
+  const dLat = (lat2 - lat1) * Math.PI / 180
+  const dLon = (lon2 - lon1) * Math.PI / 180
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
 function nearestNeighborSort(points: FlatPoint[], start = DEFAULT_MAP_CENTER): FlatPoint[] {
   const withCoords = points.filter(p => p.latitude !== 0 || p.longitude !== 0)
   const noCoords   = points.filter(p => p.latitude === 0 && p.longitude === 0)

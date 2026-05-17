@@ -3,16 +3,26 @@
 import * as React from "react"
 import fmLogo from "../../icon/fmlogo.png"
 import {
+  ChevronsUpDown,
   Loader2,
   Moon,
   Package,
   Pencil,
   Search,
+  Zap,
   Sun,
   X,
   Images,
   Users,
 } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useEditMode } from "@/contexts/EditModeContext"
 import { useTheme } from "@/hooks/use-theme"
 import {
@@ -29,6 +39,7 @@ import { Switch } from "@/components/ui/switch"
 
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
+import { NavRecent } from "@/components/NavRecent"
 import {
   Sidebar,
   SidebarContent,
@@ -221,83 +232,133 @@ export function AppSidebar({
       {...props}
     >
       <div className="flex flex-col h-full min-h-0">
-      <SidebarHeader className="border-b border-border/60 px-0 pb-2">
-        <div className="w-full px-4 py-4 flex flex-col items-center">
-            <div className="w-full flex items-center justify-center">
-              <img
-                src={fmLogo}
-                alt="FM logo"
-                className="w-full max-w-[98px] object-contain"
-              />
+      <SidebarHeader className="space-y-4 px-4 py-4">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => onNavigate?.("home")}
+            className="flex h-14 w-14 items-center justify-center rounded-3xl border border-border/70 bg-background shadow-sm transition hover:-translate-y-[1px] hover:shadow-md"
+          >
+            <img
+              src={fmLogo}
+              alt="FM logo"
+              className="h-10 w-10 object-contain"
+            />
+          </button>
+          <div className="min-w-0">
+            <p className="text-base font-semibold text-foreground">Dataakitaa</p>
+            <p className="text-[12px] text-muted-foreground">Route planning dashboard</p>
+          </div>
+        </div>
+
+        <div className="space-y-1 rounded-3xl border border-border/70 bg-background/90 p-3 shadow-sm">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Search</p>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder={text.searchPlaceholder}
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="h-11 w-full rounded-2xl border border-input bg-background px-12 text-sm shadow-none outline-none ring-0 transition duration-200 placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-ring"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-150"
+                aria-label="Clear search"
+              >
+                <X className="size-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      </SidebarHeader>
+      <SidebarContent className="space-y-3 px-3 pb-3 pt-3">
+        <div className="rounded-3xl border border-border/70 bg-background/90 p-3 shadow-sm">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">Quick access</p>
+              <p className="text-sm font-semibold text-foreground">Recently visited</p>
             </div>
           </div>
-      </SidebarHeader>
-      <div className="relative mt-3 mb-4 px-3 sidebar-search-wrapper">
-        <Search className="absolute left-5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none transition-colors" />
-        <input
-          type="text"
-          placeholder={text.searchPlaceholder}
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          className="sidebar-search h-11 w-full rounded-full border border-input bg-background pl-11 pr-9 text-xs md:text-sm shadow-none outline-none ring-0 transition-all duration-200 placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-ring"
-          aria-label="Search sidebar"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-150"
-            aria-label="Clear search"
-          >
-            <X className="size-4" />
-          </button>
-        )}
-      </div>
-      <SidebarContent>
-        <Separator className="my-2" />
-        <NavMain
-          items={filteredNavMain}
-          onItemClick={handleNavClick}
-          onSubItemClick={handleSubItemClick}
-          searchQuery={searchQuery}
-          currentPage={currentPage}
-          openItem={openNavItem}
-          onOpenItemChange={handleNavItemChange}
-        />
-        <NavProjects
-          settingsItems={data.settingsItems}
-          settingsOpen={settingsOpen}
-          onSettingsOpenChange={handleSettingsOpenChange}
-          currentPage={currentPage}
-          onNavigate={onNavigate}
-          searchQuery={searchQuery}
-        />
+          <NavRecent
+            onNavigate={onNavigate}
+            searchQuery={searchQuery}
+          />
+        </div>
+
+        <div className="rounded-3xl border border-border/70 bg-background/90 p-3 shadow-sm">
+          <NavMain
+            items={filteredNavMain}
+            onItemClick={handleNavClick}
+            onSubItemClick={handleSubItemClick}
+            searchQuery={searchQuery}
+            currentPage={currentPage}
+            openItem={openNavItem}
+            onOpenItemChange={handleNavItemChange}
+          />
+        </div>
+
+        <div className="rounded-3xl border border-border/70 bg-background/90 p-3 shadow-sm">
+          <NavProjects
+            settingsItems={data.settingsItems}
+            settingsOpen={settingsOpen}
+            onSettingsOpenChange={handleSettingsOpenChange}
+            currentPage={currentPage}
+            onNavigate={onNavigate}
+            searchQuery={searchQuery}
+          />
+        </div>
+
         {noResults && (
-          <div className="flex flex-col items-center gap-1.5 py-6 px-3 text-center animate-in fade-in duration-200">
+          <div className="flex flex-col items-center gap-1.5 rounded-3xl border border-border/70 bg-background/90 p-6 text-center shadow-sm animate-in fade-in duration-200">
             <span className="text-xl">🔍</span>
             <p className="text-xs font-medium text-muted-foreground">{text.noResults}</p>
             <p className="text-[11px] text-muted-foreground/60">{text.tryDifferentKeyword}</p>
           </div>
         )}
       </SidebarContent>
-      <SidebarFooter className="border-t border-border/60 pt-3">
-        <div className="grid gap-2 px-2">
+      <SidebarFooter className="sticky bottom-0 z-10 border-t border-border/70 bg-sidebar/95 px-4 pb-4 pt-3 backdrop-blur-xl">
+        <div className="grid gap-2">
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
-            onClick={toggleMode}
             className="justify-between"
+            onClick={() => toggleMode()}
           >
-            <span>{mode === "dark" ? "Dark mode" : "Light mode"}</span>
-            {mode === "dark" ? <Moon className="size-4" /> : <Sun className="size-4" />}
+            <div className="flex items-center gap-2">
+              {mode === "dark" ? (
+                <Moon className="size-4 shrink-0 theme-accent-indigo" />
+              ) : (
+                <Sun className="size-4 shrink-0 theme-accent-amber" />
+              )}
+              <span className="text-sm font-medium">
+                {mode === "dark" ? text.darkMode : text.lightMode}
+              </span>
+            </div>
+            <Switch size="sm" className="fcal-switch-sidebar" checked={mode === "dark"} onCheckedChange={toggleMode} />
           </Button>
+
           <Button
-            variant={isEditMode ? "default" : "outline"}
+            variant={isEditMode ? "secondary" : "outline"}
             size="sm"
-            onClick={handleEditModeToggle}
             className="justify-between"
+            onClick={handleEditModeToggle}
           >
-            <span>{isEditMode ? "Editing" : "Edit mode"}</span>
-            {isEditModeTransitioning ? <Loader2 className="size-4 animate-spin" /> : <Pencil className="size-4" />}
+            <div className="flex items-center gap-2">
+              {isEditModeTransitioning ? (
+                <Loader2 className="size-4 shrink-0 animate-spin text-primary" />
+              ) : (
+                <Pencil className={`size-4 shrink-0 ${isEditMode ? "theme-accent-emerald" : "text-[hsl(var(--accent-emerald)/0.65)]"}`} />
+              )}
+              <span className="text-sm font-medium">
+                {isEditModeTransitioning ? text.switching : text.editMode}
+              </span>
+            </div>
+            {!isEditModeTransitioning && (
+              <Switch size="sm" className="fcal-switch-sidebar" checked={isEditMode} onCheckedChange={handleEditModeToggle} />
+            )}
           </Button>
         </div>
       </SidebarFooter>

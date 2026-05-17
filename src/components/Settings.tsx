@@ -70,7 +70,7 @@ function SectionHeader({ icon, title, description }: { icon: ReactNode; title: s
         <div className="flex shrink-0 items-center justify-center p-2 bg-primary/10 rounded-lg text-primary">
           {icon}
         </div>
-        <h2 className="text-[13px] font-semibold tracking-tight text-foreground">{title}</h2>
+        <h2 className="text-lg font-semibold tracking-tight text-foreground">{title}</h2>
       </div>
       {description && (
         <p className="text-sm text-muted-foreground leading-relaxed pl-11">{description}</p>
@@ -624,7 +624,7 @@ export function Settings({ section = "profile" }: { section?: SectionId }) {
               <div className="space-y-2.5">
                 {DATABASE_STORAGE_ITEMS.map((item) => (
                   <div key={item.store} className="rounded-xl border border-border bg-card px-4 py-3.5 shadow-sm">
-                    <h3 className="text-[13px] font-semibold tracking-tight text-foreground">{item.section}</h3>
+                    <p className="text-sm font-semibold text-foreground">{item.section}</p>
                     <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{item.purpose}</p>
                   </div>
                 ))}
@@ -636,7 +636,7 @@ export function Settings({ section = "profile" }: { section?: SectionId }) {
                   <div className="space-y-2.5">
                     {LOCAL_STORAGE_ITEMS.map((item) => (
                       <div key={item.store} className="rounded-xl border border-border bg-card px-4 py-3.5 shadow-sm">
-                        <h3 className="text-[13px] font-semibold tracking-tight text-foreground">{item.section}</h3>
+                        <p className="text-sm font-semibold text-foreground">{item.section}</p>
                         <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{item.purpose}</p>
                       </div>
                     ))}
@@ -650,7 +650,7 @@ export function Settings({ section = "profile" }: { section?: SectionId }) {
                   <div className="space-y-2.5">
                     {SESSION_STORAGE_ITEMS.map((item) => (
                       <div key={item.store} className="rounded-xl border border-border bg-card px-4 py-3.5 shadow-sm">
-                        <h3 className="text-[13px] font-semibold tracking-tight text-foreground">{item.section}</h3>
+                        <p className="text-sm font-semibold text-foreground">{item.section}</p>
                         <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{item.purpose}</p>
                       </div>
                     ))}

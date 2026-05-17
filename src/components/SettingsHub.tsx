@@ -16,34 +16,34 @@ const SETTINGS_ITEMS: SettingsItem[] = [
     title: "Font",
     description: "Customize app font and text size.",
     page: "settings-appearance-font",
-    accentClass: "text-violet-400",
+    accentClass: "text-violet-400 bg-violet-400/10",
   },
   {
     icon: <Palette className="size-5" />,
     title: "Route Colours",
     description: "Set custom colours for each route.",
     page: "settings-route-colors",
-    accentClass: "text-pink-400",
+    accentClass: "text-pink-400 bg-pink-400/10",
   },
   {
     icon: <Database className="size-5" />,
     title: "Storage",
     description: "View where your data is stored.",
     page: "settings-storage",
-    accentClass: "text-sky-400",
+    accentClass: "text-sky-400 bg-sky-400/10",
   },
   {
     icon: <Lock className="size-5" />,
     title: "Security",
     description: "Manage PIN lock and app access.",
     page: "settings-security",
-    accentClass: "text-emerald-400",
+    accentClass: "text-emerald-400 bg-emerald-400/10",
   },
 ]
 
 const USER_ITEMS = [
-  { icon: <User className="size-5" />, title: "Profile", page: "settings-profile", accentClass: "text-blue-400" },
-  { icon: <Bell className="size-5" />, title: "Notifications", page: "settings-notifications", accentClass: "text-orange-400" },
+  { icon: <User className="size-5" />, title: "Profile", page: "settings-profile", accentClass: "text-blue-400 bg-blue-400/10" },
+  { icon: <Bell className="size-5" />, title: "Notifications", page: "settings-notifications", accentClass: "text-orange-400 bg-orange-400/10" },
 ]
 
 function getInitials(name: string) {
@@ -59,7 +59,7 @@ function SettingRow({ icon, title, description, accentClass, onClick }: {
       onClick={onClick}
       className="flex items-center gap-4 px-4 py-3.5 text-left hover:bg-muted/40 active:bg-muted/60 transition-colors w-full"
     >
-      <span className={`flex items-center justify-center size-9 shrink-0 ${accentClass}`}>
+      <span className={`flex items-center justify-center size-9 rounded-xl shrink-0 ${accentClass}`}>
         {icon}
       </span>
       <div className="flex-1 min-w-0">
