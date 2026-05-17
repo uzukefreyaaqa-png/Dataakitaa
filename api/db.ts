@@ -10,7 +10,7 @@ export const db = neon(connectionString)
 
 let schemaInitialized = false
 
-async function ensureSchema() {
+export async function ensureSchema() {
   if (schemaInitialized) return
 
   await db`

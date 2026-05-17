@@ -1,5 +1,5 @@
 import { badRequest, json, methodNotAllowed } from "./utils"
-import { db } from "./db"
+import { db, ensureSchema } from "./db"
 
 const parseJsonBody = (req: any) => {
   const body = req.body ?? {}
@@ -17,6 +17,8 @@ export default async function handler(req: any, res: any) {
   const method = String(req.method ?? "GET").toUpperCase()
 
   if (method === "GET") {
+    await ensureSchema()
+
     const routeId = String(req.query?.routeId ?? "").trim()
     if (!routeId) {
       return badRequest(res, "Missing routeId query parameter")
@@ -32,6 +34,8 @@ export default async function handler(req: any, res: any) {
   }
 
   if (method === "POST") {
+    await ensureSchema()
+
     const body = parseJsonBody(req)
     const id = String(body.id ?? "").trim()
     const routeId = String(body.routeId ?? "").trim()
@@ -50,6 +54,8 @@ export default async function handler(req: any, res: any) {
   }
 
   if (method === "DELETE") {
+    await ensureSchema()
+
     const routeId = String(req.query?.routeId ?? "").trim()
     const type = String(req.query?.type ?? "").trim()
     if (!routeId || !type) {
